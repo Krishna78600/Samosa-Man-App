@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "Samosa Man",
+    "slug": "samosa-man",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#fff8f0"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "com.samosaman.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fad45120-4fd4-4628-8cf4-5c907b4a3c70"
+      }
+    }
+  }
+}
