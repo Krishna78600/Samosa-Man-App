@@ -4,13 +4,20 @@
     "slug": "samosa-man",
     "version": "1.0.0",
     "orientation": "portrait",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "package": "com.samosaman.app",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#fff8f0"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fad45120-4fd4-4628-8cf4-5c907b4a3c70"
       }
     }
   }
