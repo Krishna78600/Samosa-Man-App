@@ -5,7 +5,9 @@
   "scripts": {
     "start": "expo start",
     "build": "eas build --platform android --profile production",
-    "update": "eas update --platform android"
+    "update": "eas update --platform android",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "expo": "^49.0.0",
@@ -23,6 +25,10 @@
     "@react-native-picker/picker": "2.4.10",
     "expo-updates": "~0.18.19",
     "typescript": "^5.1.3",
-    "@types/react": "~18.2.14"
+    "@types/react": "~18.2.14",
+    "expo-splash-screen": "~0.20.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
   }
 }
