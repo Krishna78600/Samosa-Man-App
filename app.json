@@ -4,7 +4,18 @@
     "slug": "samosa-man",
     "version": "1.0.0",
     "android": {
-      "package": "com.samosaman.app"
+      "package": "com.samosaman.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 0
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     },
     "extra": {
       "eas": {

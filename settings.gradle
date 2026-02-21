@@ -1,0 +1,19 @@
+pluginManagement {
+    includeBuild(new File(rootDir, "../node_modules/@react-native/gradle-plugin"))
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'Samosa Man'
+
+// Expo autolinking - must use node execution for manager to persist correctly
+apply from: new File(rootDir, "../node_modules/expo-modules-autolinking/scripts/android/autolinking_implementation.gradle")
+useExpoModules()
+
+apply from: new File(rootDir, "../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesSettingsGradle(settings)
+
+include ':app'
