@@ -1,0 +1,104 @@
+buildscript {
+    ext {
+        buildToolsVersion = findProperty('android.buildToolsVersion') ?: '34.0.0'
+        minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '23')
+        compileSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '34')
+        targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '34')
+        kotlinVersion = findProperty('android.kotlinVersion') ?: '1.9.10'
+        frescoVersion = findProperty('expo.frescoVersion') ?: '3.0.0'
+        ndkVersion = "25.1.8937393"
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath('com.android.tools.build:gradle:8.1.0')
+        classpath('org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10')
+        classpath('com.facebook.react:react-native-gradle-plugin')
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url(new File(rootDir, "../node_modules/react-native/android"))
+        }
+        maven {
+            url(new File(rootDir, "../node_modules/jsc-android/dist"))
+        }
+        google()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+    }
+}
+
+// Ensure library/app subprojects have required Android settings when modules
+// are included from node_modules (some packages omit namespace or compileSdk).
+subprojects { proj ->
+    // When the Android library plugin is applied, ensure a namespace and compileSdk are set.
+    proj.plugins.withId('com.android.library') {
+        try {
+            if (proj.hasProperty('android')) {
+                try {
+                    if (!proj.android.hasProperty('namespace') || proj.android.namespace == null) {
+                        proj.android.namespace = "expo.${proj.name.replace('-', '_')}"
+                    }
+                } catch (ignored) {}
+
+                try {
+                    proj.android.compileSdkVersion = rootProject.ext.compileSdkVersion
+                    // Ensure BuildConfig is generated for libraries that add custom fields.
+                    try { proj.android.buildFeatures.buildConfig = true } catch (ignored) {}
+                } catch (ignored) {}
+            }
+        } catch (ignored) {}
+    }
+
+    // When the Android application plugin is applied, ensure compileSdk is set.
+    proj.plugins.withId('com.android.application') {
+        try {
+            if (proj.hasProperty('android')) {
+                try {
+                    proj.android.compileSdkVersion = rootProject.ext.compileSdkVersion
+                    try { proj.android.buildFeatures.buildConfig = true } catch (ignored) {}
+                } catch (ignored) {}
+            }
+        } catch (ignored) {}
+    }
+}
+
+// Ensure Kotlin and Java compile targets match the Java 17 toolchain used for Gradle.
+subprojects { proj ->
+    // Apply settings only when kotlin-android plugin is present
+    proj.plugins.withId('kotlin-android') {
+        proj.afterEvaluate {
+            try {
+                if (proj.hasProperty('android')) {
+                    try {
+                        proj.android.compileOptions {
+                            sourceCompatibility JavaVersion.VERSION_17
+                            targetCompatibility JavaVersion.VERSION_17
+                        }
+                    } catch (ignored) {}
+                }
+            } catch (ignored) {}
+
+            // Configure Kotlin compilation target
+            try {
+                proj.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach { kt ->
+                    kt.kotlinOptions.jvmTarget = "17"
+                }
+            } catch (ignored) {}
+
+            // Configure Java compilation target
+            try {
+                proj.tasks.withType(org.gradle.api.tasks.compile.JavaCompile).configureEach { jc ->
+                    jc.sourceCompatibility = "17"
+                    jc.targetCompatibility = "17"
+                    try { jc.options.release = 17 } catch (ignored) {}
+                }
+            } catch (ignored) {}
+        }
+    }
+}
